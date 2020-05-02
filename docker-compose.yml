@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  dbos2:
+    image: mysql:5.7
+    volumes:
+            - my_storage:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: gyanesh
+      MYSQL_PASSWORD: redhat
+      MYSQL_DATABASE: drupledb
+
+  drupal:
+    image: drupal:8-apache
+    depends_on:
+      - dbos2
+    ports:
+      - 8756:80
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      - /var/www/html/sites
+    restart: always
+volumes:
+  my_storage:

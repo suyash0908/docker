@@ -1,0 +1,80 @@
+# This project is a multi-tier application running on a single host.
+# I have deployed Drupal infrastructure on docker container
+#Drupal is a free and open-source content-management framework written in PHP and distributed under the GNU General Public License. 
+#It is used as a back-end framework for at least 2.1% of all Web sites worldwide ranging from personal blogs to corporate, political, and government sites including WhiteHouse.gov and data.gov.uk. 
+#It is also used for knowledge management and business collaboration.
+
+#I have used mysql as the database and redhat8 as the baseOS
+.....................................
+#Prerequisites:
+
+#pull images for drupal and mysql:5.7
+ 
+ docker pull drupal:latest
+ docker pull mysql:5.7
+...................................... 
+ 
+#install docker-compose
+...........................................
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+.......................................
+
+
+#create a work directory
+
+mkdir /workdirectory
+cd /workdirectory
+
+
+
+#create docker-compose.yml file
+............................................
+version: '3.1'
+
+services:
+  dbos2:
+    image: mysql:5.7
+    volumes:
+            - my_storage:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: gyanesh
+      MYSQL_PASSWORD: redhat
+      MYSQL_DATABASE: drupledb
+
+  drupal:
+    image: drupal:8-apache
+    depends_on:
+      - dbos2
+    ports:
+      - 8756:80
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      - /var/www/html/sites
+    restart: always
+volumes:
+  my_storage: 
+............................................
+
+
+#run the yml file
+
+docker-compose up
+
+#now your infrastructure is ready to use
+
+#to stop the working 
+docker-compose stop
+
+
+..........................................................thank you....................................................
+
+
+
+
+
+
